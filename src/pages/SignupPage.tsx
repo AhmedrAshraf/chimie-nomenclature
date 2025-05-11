@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 export default function SignupPage() {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -20,7 +21,7 @@ export default function SignupPage() {
     try {
       setError("");
       setLoading(true);
-      await signUp(email, password);
+      await signUp(email, password, name);
       navigate("/");
     } catch (err) {
       setError("Failed to create an account");
@@ -31,7 +32,7 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100">
+    <div className="min-h-[89vh] flex items-center justify-center bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100">
       <div className="max-w-2xl w-full mx-4">
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
           {/* Card Header */}
@@ -53,6 +54,24 @@ export default function SignupPage() {
             )}
 
             <form className="space-y-6" onSubmit={handleSubmit}>
+              <div>
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Full Name
+                </label>
+                <input
+                  id="name"
+                  type="text"
+                  required
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                  placeholder="Enter your full name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </div>
+
               <div>
                 <label
                   htmlFor="email"

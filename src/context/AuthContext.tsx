@@ -6,7 +6,7 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<User | null>;
-  signUp: (email: string, password: string) => Promise<void>;
+  signUp: (email: string, password: string, name: string) => Promise<void>;
   signOut: () => Promise<void>;
 }
 
@@ -38,11 +38,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return data.user;
   };
 
-  const signUp = async (email: string, password: string) => {
-    const { data, error } = await supabase.auth.signUp({ email, password });
-    if (error) throw error;
+  const signUp = async (email: string, password: string, name: string) => {
+    // First, sign up the user with Supabase Auth
+    const { data: authData, error: authError } = await supabase.auth.signUp({ 
+      email, 
+      password,
+    });
+    
+    if (authError) throw authError;
+    
+    if (authData.user) {
+      // Then, insert the user data into the users table
+      const { error: dbError } = await supabase
+        .from('users')
+        .insert([
+          {
+            id: authData.user.id,
+            email: email,
+            full_name: name,
+            created_at: new Date().toISOString(),
+          }
+        ]);
 
-    return data.user;
+      if (dbError) throw dbError;
+    }
   };
 
   const signOut = async () => {
