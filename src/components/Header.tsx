@@ -46,7 +46,13 @@ const Header: React.FC = () => {
             Progression
           </Link>
         </div>
-        <a/button>
+        <button
+          onClick={handleLogout}
+          className="flex items-center space-x-2 hover:text-indigo-200 transition-colors"
+        >
+          <LogOut className="h-5 w-5" />
+          <span>Logout</span>
+        </button>
 
         <div className="md:hidden">
           <button
