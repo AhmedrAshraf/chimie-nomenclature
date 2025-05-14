@@ -3,10 +3,12 @@ import { Beaker, Menu, LogOut } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { User } from "lucide-react";
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
+  console.log("🚀 ~ user:", user)
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -46,14 +48,23 @@ const Header: React.FC = () => {
             Progression
           </Link>
         </div>
-        <button
+        {!user ? (
+          <button
+          onClick={() => { navigate("/login") }}
+          className="flex items-center space-x-2 hover:text-indigo-200 transition-colors"
+          >
+          <User className="h-5 w-5" />
+          <span>Login</span>
+        </button>
+        ) : (
+          <button
           onClick={handleLogout}
           className="flex items-center space-x-2 hover:text-indigo-200 transition-colors"
-        >
+          >
           <LogOut className="h-5 w-5" />
           <span>Logout</span>
         </button>
-
+        )}
         <div className="md:hidden">
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -95,6 +106,15 @@ const Header: React.FC = () => {
             >
               Progression
             </Link>
+            {!user ? (
+            <button
+              onClick={() => { navigate("/login") }}
+              className="py-2 px-3 hover:bg-indigo-600 rounded-md transition-colors flex items-center space-x-2"
+            >
+              <User className="h-5 w-5" />
+              <span>Login</span>
+            </button>
+            ) : (
             <button
               onClick={() => {
                 handleLogout();
@@ -105,6 +125,7 @@ const Header: React.FC = () => {
               <LogOut className="h-5 w-5" />
               <span>Logout</span>
             </button>
+            )}
           </div>
         </div>
       )}
